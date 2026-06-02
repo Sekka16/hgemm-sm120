@@ -269,13 +269,44 @@ void dispatch_hgemm_wmma(
     int N,
     int K,
     int bm,
-    int bn
+    int bn,
+    int bk
 ) {
-    if (bm == 128 && bn == 128) {
+    if (bm == 64 && bn == 64 && bk == 16) {
+        launch_hgemm_wmma<64, 64, 16, 32>(A, B, C, M, N, K);
+    } else if (bm == 64 && bn == 64 && bk == 32) {
+        launch_hgemm_wmma<64, 64, 32, 32>(A, B, C, M, N, K);
+    } else if (bm == 64 && bn == 64 && bk == 64) {
+        launch_hgemm_wmma<64, 64, 64, 32>(A, B, C, M, N, K);
+    } else if (bm == 64 && bn == 128 && bk == 16) {
+        launch_hgemm_wmma<64, 128, 16, 64>(A, B, C, M, N, K);
+    } else if (bm == 64 && bn == 128 && bk == 32) {
+        launch_hgemm_wmma<64, 128, 32, 64>(A, B, C, M, N, K);
+    } else if (bm == 64 && bn == 256 && bk == 16) {
+        launch_hgemm_wmma<64, 256, 16, 128>(A, B, C, M, N, K);
+    } else if (bm == 64 && bn == 256 && bk == 32) {
+        launch_hgemm_wmma<64, 256, 32, 128>(A, B, C, M, N, K);
+    } else if (bm == 128 && bn == 64 && bk == 16) {
+        launch_hgemm_wmma<128, 64, 16, 64>(A, B, C, M, N, K);
+    } else if (bm == 128 && bn == 64 && bk == 32) {
+        launch_hgemm_wmma<128, 64, 32, 64>(A, B, C, M, N, K);
+    } else if (bm == 128 && bn == 128 && bk == 16) {
+        launch_hgemm_wmma<128, 128, 16, 128>(A, B, C, M, N, K);
+    } else if (bm == 128 && bn == 128 && bk == 32) {
         launch_hgemm_wmma<128, 128, 32, 128>(A, B, C, M, N, K);
-    } else if (bm == 128 && bn == 256) {
+    } else if (bm == 128 && bn == 256 && bk == 16) {
+        launch_hgemm_wmma<128, 256, 16, 256>(A, B, C, M, N, K);
+    } else if (bm == 128 && bn == 256 && bk == 32) {
         launch_hgemm_wmma<128, 256, 32, 256>(A, B, C, M, N, K);
+    } else if (bm == 256 && bn == 64 && bk == 16) {
+        launch_hgemm_wmma<256, 64, 16, 128>(A, B, C, M, N, K);
+    } else if (bm == 256 && bn == 64 && bk == 32) {
+        launch_hgemm_wmma<256, 64, 32, 128>(A, B, C, M, N, K);
+    } else if (bm == 256 && bn == 128 && bk == 16) {
+        launch_hgemm_wmma<256, 128, 16, 256>(A, B, C, M, N, K);
+    } else if (bm == 256 && bn == 128 && bk == 32) {
+        launch_hgemm_wmma<256, 128, 32, 256>(A, B, C, M, N, K);
     } else {
-        printf("Unsupported tile shape: BM=%d, BN=%d\n", bm, bn);
+        printf("Unsupported tile shape: BM=%d, BN=%d, BK=%d\n", bm, bn, bk);
     }
 }
